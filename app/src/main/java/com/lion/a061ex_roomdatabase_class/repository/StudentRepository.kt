@@ -27,32 +27,34 @@ class StudentRepository {
 
             studentDatabase?.studentDAO()?.insertStudentData(studentVO)
         }
+
+        // 학생 정보 전체를 가져오는 메서드
+        fun selectStudentInfoAll(context: Context) : MutableList<StudentViewModel>{
+            // 데이터 베이스 객체
+            val studentDatabase = StudentDatabase.getInstance(context)
+            // 학생 데이터 전체를 가져온다
+            val studentVoList = studentDatabase?.studentDAO()?.selectStudentDataAll()
+            // 학생 데이터를 담을 리스트
+            val studentViewModelList = mutableListOf<StudentViewModel>()
+            // 학생의 수 만큼 반복한다.
+            studentVoList?.forEach {
+                // 학생 데이터를 추출한다.
+                val studentType = when(it.studentType){
+                    StudentType.STUDENT_TYPE_BASEBALL.number -> StudentType.STUDENT_TYPE_BASEBALL
+                    StudentType.STUDENT_TYPE_BASKETBALL.number -> StudentType.STUDENT_TYPE_BASKETBALL
+                    else -> StudentType.STUDENT_TYPE_SOCCER
+                }
+                val studentName = it.studentName
+                val studentAge = it.studentAge
+                val studentIdx = it.studentIdx
+                // 객체에 담는다.
+                val studentViewModel = StudentViewModel(studentIdx, studentType, studentName, studentAge)
+                // 리스트에 담는다.
+                studentViewModelList.add(studentViewModel)
+            }
+            return studentViewModelList
+        }
     }
 
-    // 학생 정보 전체를 가져오는 메서드
-    fun selectStudentInfoAll(context: Context) : MutableList<StudentViewModel>{
-        // 데이터 베이스 객체
-        val studentDatabase = StudentDatabase.getInstance(context)
-        // 학생 데이터 전체를 가져온다
-        val studentVoList = studentDatabase?.studentDAO()?.selectStudentDataAll()
-        // 학생 데이터를 담을 리스트
-        val studentViewModelList = mutableListOf<StudentViewModel>()
-        // 학생의 수 만큼 반복한다.
-        studentVoList?.forEach {
-            // 학생 데이터를 추출한다.
-            val studentType = when(it.studentType){
-                StudentType.STUDENT_TYPE_BASEBALL.number -> StudentType.STUDENT_TYPE_BASEBALL
-                StudentType.STUDENT_TYPE_BASKETBALL.number -> StudentType.STUDENT_TYPE_BASKETBALL
-                else -> StudentType.STUDENT_TYPE_SOCCER
-            }
-            val studentName = it.studentName
-            val studentAge = it.studentAge
-            val studentIdx = it.studentIdx
-            // 객체에 담는다.
-            val studentViewModel = StudentViewModel(studentIdx, studentType, studentName, studentAge)
-            // 리스트에 담는다.
-            studentViewModelList.add(studentViewModel)
-        }
-        return studentViewModelList
-    }
+
 }

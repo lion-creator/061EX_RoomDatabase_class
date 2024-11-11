@@ -13,7 +13,13 @@ import com.lion.a061ex_roomdatabase_class.MainActivity
 import com.lion.a061ex_roomdatabase_class.R
 import com.lion.a061ex_roomdatabase_class.databinding.FragmentMainBinding
 import com.lion.a061ex_roomdatabase_class.databinding.RowMainBinding
+import com.lion.a061ex_roomdatabase_class.repository.StudentRepository
 import com.lion.a061ex_roomdatabase_class.util.FragmentName
+import com.lion.a061ex_roomdatabase_class.viewmodel.StudentViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -21,9 +27,10 @@ class MainFragment : Fragment() {
     lateinit var mainActivity: MainActivity
 
     // RecyclerView 구성을 위한 임시데이터
-    val studentList = Array(50){
-        "홍길동 $it"
-    }
+//    val studentList = Array(50){
+//        "홍길동 $it"
+//    }
+    var studentList = mutableListOf<StudentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentMainBinding = FragmentMainBinding.inflate(inflater)
@@ -35,6 +42,8 @@ class MainFragment : Fragment() {
         settingRecyclerView()
         // FAB를 구성하는 메서드 호출
         settingFAB()
+        // RecyclerView 갱신 메서드를 호출한다.
+        refreshRecyclerViewMain()
 
         return fragmentMainBinding.root
     }
@@ -54,6 +63,20 @@ class MainFragment : Fragment() {
                 // InputFragment로 이동한다.
                 mainActivity.replaceFragment(FragmentName.INPUT_FRAGMENT, true, null)
             }
+        }
+    }
+
+    // 학생 정보를 가져와 RecyclerView를 갱신하는 메서드
+    fun refreshRecyclerViewMain(){
+        // 학생 정보를 가져온다.
+        CoroutineScope(Dispatchers.Main).launch {
+            val work1 = async(Dispatchers.IO){
+                // 학생정보를 가져온다.
+                StudentRepository.selectStudentInfoAll(mainActivity)
+            }
+            studentList = work1.await() as MutableList<StudentViewModel>
+            // RecyclerView를 갱신한다.
+            fragmentMainBinding.recyclerViewMain.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -108,7 +131,7 @@ class MainFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolderMain, position: Int) {
-            holder.rowMainBinding.textViewRowMainStudentName.text = studentList[position]
+            holder.rowMainBinding.textViewRowMainStudentName.text = studentList[position].studentName
         }
     }
 }
