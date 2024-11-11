@@ -1,0 +1,42 @@
+[ activity_main.xml ]
+
+ConstraintLayout
+    - id : main
+
+    FragmentContainerView
+        - id : containerMain
+        - layout_width : 0dp
+        - layout_height : 0dp
+        - layout_constraintBottom_toBottomOf : parent
+        - layout_constraintEnd_toEndOf : parent
+        - layout_constraintStart_toStartOf : parent
+        - layout_constraintTop_toTopOf : parent
+
+[ row_main.xml ]
+
+LinearLayout
+    - orientation : vertical
+    - padding : 10dp
+
+    TextView
+        - id : textViewRowMainStudentName
+        - textAppearance : Large
+
+[ fragment_main.xml ]
+
+ConstraintLayout
+
+    MaterialToolbar
+        - layout_constraintEnd_toEndOf : parent
+        - layout_constraintStart_toStartOf : parent
+        - layout_constraintTop_toTopOf : parent
+        - background : @android:color/transparent
+        - id : toolbarMain
+
+    RecyclerView
+        - layout_width : 0dp
+        - layout_height : 0dp
+        - layout_constraintBottom_toBottomOf : parent
+        - layout_constraintEnd_toEndOf : parent
+        - layout_constraintStart_toStartOf : parent
+        - id : recyclerViewMain
