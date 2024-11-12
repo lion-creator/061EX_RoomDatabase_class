@@ -14,7 +14,7 @@ import com.lion.a061ex_roomdatabase_class.fragment.MainFragment
 import com.lion.a061ex_roomdatabase_class.fragment.ModifyFragment
 import com.lion.a061ex_roomdatabase_class.fragment.ShowFragment
 import com.lion.a061ex_roomdatabase_class.util.FragmentName
-////// 여기 수정됨 ///////
+////// 여기 수정됨 ///////////// 여기 수정됨 ///////
 class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
