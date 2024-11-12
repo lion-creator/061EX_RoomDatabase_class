@@ -1,11 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    ///여기 바뀜///
     kotlin("kapt")
 }
 
 android {
     namespace = "com.lion.a061ex_roomdatabase_class"
+    ///여기 바뀜///
     compileSdk = 35
 
     defaultConfig {
@@ -28,11 +30,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        ///여기 바뀜///
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        ///여기 바뀜///
+        jvmTarget = "11"
     }
     viewBinding {
         enable = true
@@ -50,9 +54,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation("androidx.fragment:fragment-ktx:1.8.5")
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    ///여기 바뀜///
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 
 }

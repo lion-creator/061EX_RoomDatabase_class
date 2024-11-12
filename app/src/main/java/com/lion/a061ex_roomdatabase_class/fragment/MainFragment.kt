@@ -74,7 +74,7 @@ class MainFragment : Fragment() {
                 // 학생정보를 가져온다.
                 StudentRepository.selectStudentInfoAll(mainActivity)
             }
-            studentList = work1.await() as MutableList<StudentViewModel>
+            studentList = work1.await()
             // RecyclerView를 갱신한다.
             fragmentMainBinding.recyclerViewMain.adapter?.notifyDataSetChanged()
         }
@@ -98,8 +98,11 @@ class MainFragment : Fragment() {
         // ViewHolder
         inner class ViewHolderMain(val rowMainBinding: RowMainBinding) : RecyclerView.ViewHolder(rowMainBinding.root), OnClickListener {
             override fun onClick(v: View?) {
+                // 사용자가 누른 학생의 학생 번호를 담아준다.
+                val dataBundle = Bundle()
+                dataBundle.putInt("studentIdx", studentList[adapterPosition].studentIdx)
                 // ShowFragment로 이동한다.
-                mainActivity.replaceFragment(FragmentName.SHOW_FRAGMENT, true, null)
+                mainActivity.replaceFragment(FragmentName.SHOW_FRAGMENT, true, dataBundle)
             }
         }
 

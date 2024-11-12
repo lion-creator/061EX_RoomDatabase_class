@@ -54,6 +54,24 @@ class StudentRepository {
             }
             return studentViewModelList
         }
+
+        fun selectStudentInfoByStudentIdx(context: Context, studentIdx:Int) : StudentViewModel{
+            val studentDatabase = StudentDatabase.getInstance(context)
+            // 학생 한명의 정보를 가져온다.
+            val studentVO = studentDatabase?.studentDAO()?.selectStudentDataByStudentIdx(studentIdx)
+            // 학생 객체에 담는다
+            val studentType = when(studentVO?.studentType){
+                StudentType.STUDENT_TYPE_BASEBALL.number -> StudentType.STUDENT_TYPE_BASEBALL
+                StudentType.STUDENT_TYPE_BASKETBALL.number -> StudentType.STUDENT_TYPE_BASKETBALL
+                else -> StudentType.STUDENT_TYPE_SOCCER
+            }
+            val studentName = studentVO?.studentName
+            val studentAge = studentVO?.studentAge
+
+            val studentViewModel = StudentViewModel(studentIdx, studentType, studentName!!, studentAge!!)
+
+            return studentViewModel
+        }
     }
 
 

@@ -8,7 +8,12 @@ import android.view.ViewGroup
 import com.lion.a061ex_roomdatabase_class.MainActivity
 import com.lion.a061ex_roomdatabase_class.R
 import com.lion.a061ex_roomdatabase_class.databinding.FragmentShowBinding
+import com.lion.a061ex_roomdatabase_class.repository.StudentRepository
 import com.lion.a061ex_roomdatabase_class.util.FragmentName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class ShowFragment : Fragment() {
 
@@ -21,6 +26,8 @@ class ShowFragment : Fragment() {
 
         // 툴바 설정 메서드 호출
         settingToolbar()
+        // 데이터를 가져와 출력한다.
+        settingTextView()
 
         return fragmentShowBinding.root
     }
@@ -49,6 +56,27 @@ class ShowFragment : Fragment() {
                 }
                 true
             }
+        }
+    }
+
+    // TextView에 값을 설정하는 메서드
+    fun settingTextView(){
+        // 만일의 경우를 위해 TextView들을 초기화 해준다.
+        fragmentShowBinding.textViewShowType.text = ""
+        fragmentShowBinding.textViewShowName.text = ""
+        fragmentShowBinding.textViewShowAge.text = ""
+        // 학생 번호를 추출한다.
+        val studentIdx = arguments?.getInt("studentIdx")
+        // 학생 데이터를 가져와 출력한다.
+        CoroutineScope(Dispatchers.Main).launch {
+            val work1 = async(Dispatchers.IO){
+                StudentRepository.selectStudentInfoByStudentIdx(mainActivity, studentIdx!!)
+            }
+            val studentViewModel = work1.await()
+
+            fragmentShowBinding.textViewShowType.text = studentViewModel.studentType.str
+            fragmentShowBinding.textViewShowName.text = studentViewModel.studentName
+            fragmentShowBinding.textViewShowAge.text = studentViewModel.studentAge.toString()
         }
     }
 }
