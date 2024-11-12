@@ -69,10 +69,11 @@ class InputFragment : Fragment() {
                         // 데이터를 저장하는 메서드를 코루틴으로 운영한다.
                         CoroutineScope(Dispatchers.Main).launch {
                             // 저장작업이 끝날때까지 대기한다.
-                            async(Dispatchers.IO){
+                            val work1 = async(Dispatchers.IO){
                                 // 저장한다.
                                 StudentRepository.insertStudentInfo(mainActivity, studentViewModel)
                             }
+                            work1.join()
                             // 저장작업이 모두 끝나면 이전 화면으로 돌아간다.
                             mainActivity.removeFragment(FragmentName.INPUT_FRAGMENT)
                         }

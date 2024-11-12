@@ -1,10 +1,12 @@
 package com.lion.a061ex_roomdatabase_class.fragment
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.lion.a061ex_roomdatabase_class.MainActivity
 import com.lion.a061ex_roomdatabase_class.R
 import com.lion.a061ex_roomdatabase_class.databinding.FragmentShowBinding
@@ -47,11 +49,16 @@ class ShowFragment : Fragment() {
             toolbarShow.setOnMenuItemClickListener {
                 when(it.itemId){
                     R.id.show_toolbar_menu_edit -> {
+                        // 학생 번호를 담아준다.
+                        val dataBundle = Bundle()
+                        dataBundle.putInt("studentIdx", arguments?.getInt("studentIdx")!!)
                         // ModifyFragment로 이동한다.
-                        mainActivity.replaceFragment(FragmentName.MODIFY_FRAGMENT, true, null)
+                        mainActivity.replaceFragment(FragmentName.MODIFY_FRAGMENT, true, dataBundle)
                     }
                     R.id.show_toolbar_menu_delete -> {
-                        mainActivity.removeFragment(FragmentName.SHOW_FRAGMENT)
+                        // mainActivity.removeFragment(FragmentName.SHOW_FRAGMENT)
+                        // 삭제를 위한 다이얼로그를 띄운다.
+                        deleteStudentInfo()
                     }
                 }
                 true
@@ -65,6 +72,7 @@ class ShowFragment : Fragment() {
         fragmentShowBinding.textViewShowType.text = ""
         fragmentShowBinding.textViewShowName.text = ""
         fragmentShowBinding.textViewShowAge.text = ""
+
         // 학생 번호를 추출한다.
         val studentIdx = arguments?.getInt("studentIdx")
         // 학생 데이터를 가져와 출력한다.
@@ -78,5 +86,25 @@ class ShowFragment : Fragment() {
             fragmentShowBinding.textViewShowName.text = studentViewModel.studentName
             fragmentShowBinding.textViewShowAge.text = studentViewModel.studentAge.toString()
         }
+    }
+
+    // 삭제처리 메서드
+    fun deleteStudentInfo(){
+        // 다이얼로그를 띄워주다.
+        val materialAlertDialogBuilder = MaterialAlertDialogBuilder(mainActivity)
+        materialAlertDialogBuilder.setTitle("삭제")
+        materialAlertDialogBuilder.setMessage("삭제를 할 경우 복원이 불가능합니다")
+        materialAlertDialogBuilder.setNeutralButton("취소", null)
+        materialAlertDialogBuilder.setPositiveButton("삭제"){ dialogInterface: DialogInterface, i: Int ->
+            CoroutineScope(Dispatchers.Main).launch {
+                val work1 = async(Dispatchers.IO){
+                    val studentIdx = arguments?.getInt("studentIdx")
+                    StudentRepository.deleteStudentInfoByStudentIdx(mainActivity, studentIdx!!)
+                }
+                work1.join()
+                mainActivity.removeFragment(FragmentName.SHOW_FRAGMENT)
+            }
+        }
+        materialAlertDialogBuilder.show()
     }
 }

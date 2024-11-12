@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.lion.a061ex_roomdatabase_class.vo.StudentVO
 
 @Dao
@@ -32,4 +33,8 @@ interface StudentDAO {
 
 //    @Query("delete from StudentTable where studentIdx = :studentIdx")
 //    fun deleteStudentData(studentIdx:Int)
+
+    // 학생 한명의 정보를 수정하는 메서드
+    @Update
+    fun updateStudentData(studentVO: StudentVO)
 }

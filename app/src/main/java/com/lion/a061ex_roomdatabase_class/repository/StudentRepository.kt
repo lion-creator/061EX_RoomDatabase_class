@@ -72,7 +72,28 @@ class StudentRepository {
 
             return studentViewModel
         }
+
+        // 학생 정보 삭제
+        fun deleteStudentInfoByStudentIdx(context: Context, studentIdx: Int){
+            val studentDatabase = StudentDatabase.getInstance(context)
+            // 삭제할 학생 번호를 담고 있을 객체를 생성한다.
+            val studentVO = StudentVO(studentIdx = studentIdx)
+            // 삭제한다
+            studentDatabase?.studentDAO()?.deleteStudentData(studentVO)
+        }
+
+        // 학생 정보를 수정하는 메서드
+        fun updateStudentInfo(context: Context, studentViewModel: StudentViewModel){
+            val studentDatabase = StudentDatabase.getInstance(context)
+            // VO에 객체에 담아준다
+            val studentIdx = studentViewModel.studentIdx
+            val studentType = studentViewModel.studentType.number
+            val studentName = studentViewModel.studentName
+            val studentAge = studentViewModel.studentAge
+            val studentVO = StudentVO(studentIdx, studentName, studentType, studentAge)
+            // 수정한다.
+            studentDatabase?.studentDAO()?.updateStudentData(studentVO)
+        }
+
     }
-
-
 }
